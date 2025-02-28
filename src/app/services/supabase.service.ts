@@ -12,10 +12,10 @@ export class SupabaseService {
 
   constructor() { }
   
-  async traerTodo(){
+  async getTodasRecetas(){
     let data = (await this.supabase
-      .from('ing-rec')
-      .select('cantidad, ingredient_id (name), recipe_id (name)')).data
+      .from('recetas')
+      .select('id, name, description, time, likes, stars')).data
     
     if (data != null)     
       return data;
@@ -26,7 +26,7 @@ export class SupabaseService {
   async getReceta(receta: string | number){
     let data = (await this.supabase
       .from('recetas')
-      .select('id, name, description')
+      .select('id, name, description, imagen')
       .eq(typeof(receta) == 'number' ? 'id' : 'name', receta)).data
 
     if (data != null)  
@@ -40,6 +40,18 @@ export class SupabaseService {
       .from('ingredientes')
       .select('id, name')
       .eq('name', ingrediente)).data
+
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
+  async getImagen(receta:number){
+    let data = (await this.supabase
+      .from('imagenes')
+      .select('url')
+      .eq('receta_id', receta)).data
 
     if (data != null)  
       return data;

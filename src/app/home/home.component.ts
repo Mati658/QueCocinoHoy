@@ -1,31 +1,45 @@
-import { Component, inject } from '@angular/core';
-import { APIsService } from '../services/apis.service';
+import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
-  recetaApi = inject(APIsService);
+export class HomeComponent implements AfterViewInit{
   supabase = inject(SupabaseService);
+  recetas!: any
+  recetasMostrar: any[] = [];
+  recetasLimit = 3;
+  @ViewChild('observer') observer!: ElementRef;
 
-  constructor(){
-    this.filtrarRecetas(['papas', 'cebollas','ajo']);
-    this.supabase.getIngredientesDeReceta(165).then((res:any)=>{
-      console.log(res);
-      res.forEach((element:any) => {
-        console.log(element.ingredient_id.name)
-      });
-    });
-    
-    // this.supabase.traerTodo().then(res=>{
-    //   console.log(res);
-    // });
+  constructor(){}
+
+  async ngAfterViewInit() {
+    this.recetas = await this.supabase.getTodasRecetas();
+    this.cargarRecetas();
+    this.setupIntersectionObserver();
   }
+  cargarRecetas() {
+    console.log(this.recetas)
+    const nuevasRecetas = this.recetas.slice(this.recetasMostrar.length, this.recetasMostrar.length + this.recetasLimit);
+    this.recetasMostrar = [...this.recetasMostrar, ...nuevasRecetas];
+    console.log(this.recetasMostrar)
+  }
+
+  setupIntersectionObserver() {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        this.cargarRecetas();
+      }
+    });
+
+    observer.observe(this.observer.nativeElement);
+  }
+
 
   async filtrarRecetas(ingredientes:string[]){
     this.supabase.getRecetasByIngredientes(ingredientes).then(async res=>{
@@ -35,11 +49,11 @@ export class HomeComponent {
       for (const element of ing) {
         let data : any = {};
         let receta : any = await this.supabase.getReceta(element.recipe_id);
+        let ingredientes : any = await this.supabase.getIngredientesDeReceta(element.recipe_id);
+        
         data.nombre = receta[0].name;
         data.description = receta[0].description;
-        
-        let ingredientes : any = await this.supabase.getIngredientesDeReceta(element.recipe_id);
-          
+        data.time = receta[0].time;
         for (let i = 0; i < ingredientes.length; i++) {
           const element = ingredientes[i];
           if(!data.ingredientes)
@@ -51,5 +65,21 @@ export class HomeComponent {
       }
       console.log(recetas)
     });
+  }
+
+  getImagen(id_receta:number){
+    // let imagen : string = "";
+    // this.supabase.getImagen(id_receta).then((res:any)=>{
+    //   imagen = (res[0].url);
+    // })
+
+    // if (imagen != "") {
+    //   return imagen;
+    // }
+
+    //EL LINK MUY LARGO ROMPE LA PAGINA
+
+    return false;
+
   }
 }

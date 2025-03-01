@@ -13,7 +13,8 @@ export class HomeComponent implements AfterViewInit{
   supabase = inject(SupabaseService);
   recetas!: any
   recetasMostrar: any[] = [];
-  recetasLimit = 3;
+  recetasLimit = 6;
+  imagenPrueba! : string | boolean;
   @ViewChild('observer') observer!: ElementRef;
 
   constructor(){}
@@ -54,6 +55,7 @@ export class HomeComponent implements AfterViewInit{
         data.nombre = receta[0].name;
         data.description = receta[0].description;
         data.time = receta[0].time;
+        data.imagen = receta[0].imagenes;
         for (let i = 0; i < ingredientes.length; i++) {
           const element = ingredientes[i];
           if(!data.ingredientes)
@@ -67,19 +69,13 @@ export class HomeComponent implements AfterViewInit{
     });
   }
 
-  getImagen(id_receta:number){
-    // let imagen : string = "";
-    // this.supabase.getImagen(id_receta).then((res:any)=>{
-    //   imagen = (res[0].url);
-    // })
-
-    // if (imagen != "") {
-    //   return imagen;
-    // }
-
-    //EL LINK MUY LARGO ROMPE LA PAGINA
-
-    return false;
-
+  convertirJson(json:string){
+    let a : any= {"img": ""};
+    if (json) 
+      return JSON.parse(json);
+    
+    return a;
   }
+
+  
 }

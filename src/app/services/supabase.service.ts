@@ -15,7 +15,7 @@ export class SupabaseService {
   async getTodasRecetas(){
     let data = (await this.supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars')).data
+      .select('id, name, description, time, likes, stars, imagenes')).data
     
     if (data != null)     
       return data;
@@ -26,7 +26,7 @@ export class SupabaseService {
   async getReceta(receta: string | number){
     let data = (await this.supabase
       .from('recetas')
-      .select('id, name, description, imagen')
+      .select('id, name, description, imagenes')
       .eq(typeof(receta) == 'number' ? 'id' : 'name', receta)).data
 
     if (data != null)  

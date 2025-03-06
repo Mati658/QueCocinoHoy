@@ -1,4 +1,11 @@
-<div class="linea-guia">
+<div class="blur" *ngIf="flagReceta!=false"></div>
+<div class="linea-guia" id="fondo">
+    <!-- #region VENTANA MODAL RECETA -->
+    <div class="modal-receta" *ngIf="flagReceta!=false" appClickOutside (outside)="recibirFlag($event)">
+        <app-receta [recetaRecibida]="recetaSeleccionada"></app-receta>
+    </div>
+    <!-- #endregion -->
+
     <div class="titulo-container">
         <h1 class="titulo rouge-script">¡Qué Cocino Hoy?</h1>
     </div>
@@ -18,7 +25,7 @@
 
     <div class="recetas-container" *ngIf="recetasMostrar!=[]">
         @for (receta of recetasMostrar; track $index) {
-            <div class="card">
+            <div class="card" (click)="SeleccionarReceta(receta)">
                 <img [src]="receta.imagenes[0]" class="img-feed">
                 <h3 class="receta-name-feed rouge-script truncate-multiline" *ngIf="receta!=null">{{receta.name}}</h3>
                 

@@ -7,7 +7,16 @@
     font-style: normal;
   }
 
+@import url('https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Dhurjati&family=Honk&family=Knewave&family=Lugrasimo&family=Modak&family=Rampart+One&family=Rouge+Script&display=swap');
+.annie-telescope {
+  font-family: "Annie Use Your Telescope", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
 
+.no-scroll{
+  overflow-y: hidden;
+}
 //-----------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------Corazon------------------------------------------------------------------
 .heart-container {

@@ -15,7 +15,7 @@ export class SupabaseService {
   async getTodasRecetas(){
     let data = (await this.supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes')).data
+      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name)')).data
     
     if (data != null)     
       return data;

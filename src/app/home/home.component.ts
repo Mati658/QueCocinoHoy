@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
 import { CommonModule } from '@angular/common';
+import { RecetaComponent } from '../receta/receta.component';
+import { ClickOutsideDirective } from '../directives/click-outside.directive';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RecetaComponent, ClickOutsideDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -16,7 +18,9 @@ export class HomeComponent implements AfterViewInit{
   recetasLimit = 6;
   imagenPrueba! : string | boolean;
   @ViewChild('observer') observer!: ElementRef;
-
+  recetaSeleccionada : any;
+  flagReceta : boolean = false;
+  flagAnim : boolean = false;
   constructor(){}
 
   async ngAfterViewInit() {
@@ -24,6 +28,7 @@ export class HomeComponent implements AfterViewInit{
     this.cargarRecetas();
     this.setupIntersectionObserver();
   }
+
   cargarRecetas() {
     console.log(this.recetas)
     const nuevasRecetas = this.recetas.slice(this.recetasMostrar.length, this.recetasMostrar.length + this.recetasLimit);
@@ -41,6 +46,16 @@ export class HomeComponent implements AfterViewInit{
     observer.observe(this.observer.nativeElement);
   }
 
+  SeleccionarReceta(receta:any){
+    this.recetaSeleccionada = receta;
+    this.flagReceta = true;
+
+    const buttonElement = document.getElementById("fondo");
+    if (buttonElement) 
+      // buttonElement.style.overflowY = "hidden";
+    
+    console.log(receta)
+  }
 
   async filtrarRecetas(ingredientes:string[]){
     this.supabase.getRecetasByIngredientes(ingredientes).then(async res=>{
@@ -75,6 +90,15 @@ export class HomeComponent implements AfterViewInit{
       return JSON.parse(json);
     
     return a;
+  }
+
+  recibirFlag(flag : any){
+    this.flagAnim = !flag
+    setTimeout(async () => {
+      this.flagReceta = !flag;
+    this.flagAnim = true;
+    }, 500);
+    console.log(flag)
   }
 
   

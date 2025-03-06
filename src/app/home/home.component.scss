@@ -1,5 +1,5 @@
 .observer {
-    height: 20px; /* Pequeño espacio para que el observer detecte el final */
+    height: 20px; // espacio para que el observer detecte el final
   }
 
 .linea-guia{
@@ -74,6 +74,37 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+.modal-receta{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2.5%;
+    // left: 25%;
+    max-width: 700px;
+    height: auto;
+    height: 85%;
+    min-width: 700px;
+    background-color:#F6F6F6;
+    z-index: 10;
+    align-self: center;
+  }
+
+
+.blur{
+    backdrop-filter: blur(5px) saturate(126%);
+    -webkit-backdrop-filter: blur(5px) saturate(126%);
+    background-color: rgba(38,23,23, 0);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.18);
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: hidden;
+}
 
 //-----------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------Buscador---------------------------------------------------------------

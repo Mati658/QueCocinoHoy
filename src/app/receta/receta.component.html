@@ -1,89 +1,93 @@
 <div class="receta">
     <div class="card">
-        <img [src]="receta.imagenes[0]" class="img-feed">
-        <h3 class="receta-name-feed rouge-script" >Ensalada de espinacas con jamón y vinagreta de cacahuetes</h3>
+        <div style="width: 100%; height: 100%;">
+            <div style="width: 100%; height:auto; ">
+                <img [src]="imagen" class="img-feed">
+                <div class="heart-container">
+                    <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                    <div class="svg-container">
+                        <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                            </path>
+                        </svg>
+                        <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                            </path>
+                        </svg>
+                        <svg class="svg-celebrate" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="10,10 20,20"></polygon>
+                            <polygon points="10,50 20,50"></polygon>
+                            <polygon points="20,80 30,70"></polygon>
+                            <polygon points="90,10 80,20"></polygon>
+                            <polygon points="90,50 80,50"></polygon>
+                            <polygon points="80,80 70,70"></polygon>
+                        </svg>
+                    </div>
+                    <h5 class="likes">{{receta.likes}}</h5>
+                </div> 
         
-        <button id="btn-message" class="button-message">
-            <div class="content-avatar">
-                <div class="status-user"></div>
-                <div class="avatar">
-                    <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
-                </div>
+                <label class="ui-bookmark">
+                    <input type="checkbox">
+                    <div class="bookmark">
+                    <svg viewBox="0 0 32 32">
+                        <g>
+                        <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
+                        </g>
+                    </svg>
+                    </div>
+                </label>
             </div>
-            <div class="notice-content">
-                <div class="username">Jessica Sanders</div>
-                <div class="user-id">Hace 4 horas</div>
-            </div>
-        </button>
+            <h3 class="receta-name-feed annie-telescope truncate-multiline" >{{receta.name}}</h3>
 
-        <div class="rating">
-            <input type="radio" id="star-1" name="star-radio" value="star-1">
-            <label for="star-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
-            </label>
-            <input type="radio" id="star-2" name="star-radio" value="star-1">
-            <label for="star-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
-            </label>
-            <input type="radio" id="star-3" name="star-radio" value="star-1">
-            <label for="star-3">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
-            </label>
-            <input type="radio" id="star-4" name="star-radio" value="star-1">
-            <label for="star-4">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
-            </label>
-            <input type="radio" id="star-5" name="star-radio" value="star-1">
-            <label for="star-5">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
-            </label>
         </div>
-
-        <div class="heart-container">
-            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-            <div class="svg-container">
-                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                    </path>
-                </svg>
-                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                    </path>
-                </svg>
-                <svg class="svg-celebrate" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="10,10 20,20"></polygon>
-                    <polygon points="10,50 20,50"></polygon>
-                    <polygon points="20,80 30,70"></polygon>
-                    <polygon points="90,10 80,20"></polygon>
-                    <polygon points="90,50 80,50"></polygon>
-                    <polygon points="80,80 70,70"></polygon>
-                </svg>
+    </div>
+        
+    <button id="btn-message" class="button-message">
+        <div class="content-avatar">
+            <div class="status-user"></div>
+            <div class="avatar">
+                <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
             </div>
-            <h5 class="likes">54</h5>
-        </div> 
+        </div>
+        <div class="notice-content">
+            <div class="username">{{receta.user_id.name}}</div>
+            <div class="user-id">Hace 4 horas (ARREGLAR)</div>
+        </div>
+    </button>
 
-        <label class="ui-bookmark">
-            <input type="checkbox">
-            <div class="bookmark">
-            <svg viewBox="0 0 32 32">
-                <g>
-                <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                </g>
-            </svg>
-            </div>
+    <div class="rating">
+        <input type="radio" id="star-1" name="star-radio" value="star-1">
+        <label for="star-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+        </label>
+        <input type="radio" id="star-2" name="star-radio" value="star-1">
+        <label for="star-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+        </label>
+        <input type="radio" id="star-3" name="star-radio" value="star-1">
+        <label for="star-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+        </label>
+        <input type="radio" id="star-4" name="star-radio" value="star-1">
+        <label for="star-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+        </label>
+        <input type="radio" id="star-5" name="star-radio" value="star-1">
+        <label for="star-5">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
         </label>
     </div>
 
     <div class="container">
-        <div class="descripcion">
-            <span></span>
+        <div class="descripcion scroll-1">
+            <span>{{receta.description}}</span>
         </div>
             
-        <div class="ingredientes">
-                <i style="transform: skewX(-15deg);">X1</i> mayonesa <br>
-                <i style="transform: skewX(-15deg);">X1</i> huevo <br>
-                <i style="transform: skewX(-15deg);">X1</i> vaso de arroz <br>
-                <i style="transform: skewX(-15deg);">X1</i> lechuga <br>
+        <div class="ingredientes scroll-1">
+            <i style="transform: skewX(-15deg);">Ingredientes:</i> <br><br>
+            @for (ingrediente of ingredientes; track $index) {
+                <i style="transform: skewX(-15deg);">X{{ingrediente.cantidad}}</i> {{ingrediente.ingredient_id.name}}<br>
+            }
 
         </div>
     </div>
@@ -92,61 +96,36 @@
 
 </div>
 
-<div class="comentarios">
-    <div class="comentario">
-        <button id="btn-message" class="button-message">
-            <div class="content-avatar">
-                <div class="status-user"></div>
-                <div class="avatar">
-                    <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
-                </div>
-            </div>
-            <div class="notice-content">
-                <div class="username">Jessica Sanders</div>
-                <div class="user-id">PITOOO asdasd a asd asd asd as dasd asdasd as a asdasd asd asd as da sd asd asd asd as dasdas asd asd asdasd as asd asdas d asd asd asd as dasd asd asd asdasd asd asd asd as das d asdasdasd asd asd asdasd asd asd a da sd asd asd asd asd asd as da sdas d asdasdasd as da sd asd asd asd</div>
-            </div>
+<div class="text-box">
+    <div class="box-container">
+    <textarea placeholder="Comentar"></textarea>
+        <div class="formatting">
+        <button type="submit" class="send" title="Send">
+            <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" stroke="#ffffff" d="M12 5L12 20"></path>
+            <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" stroke="#ffffff" d="M7 9L11.2929 4.70711C11.6262 4.37377 11.7929 4.20711 12 4.20711C12.2071 4.20711 12.3738 4.37377 12.7071 4.70711L17 9"></path>
+            </svg>
         </button>
+        </div>
     </div>
-    <div class="comentario">
-        <button id="btn-message" class="button-message">
-            <div class="content-avatar">
-                <div class="status-user"></div>
-                <div class="avatar">
-                    <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
+</div>
+<div class="comentarios scroll-1">
+
+    @for (comentario of receta.comments; track $index) {
+        <div class="comentario">
+            <button id="btn-message" class="button-message">
+                <div class="content-avatar">
+                    <div class="status-user"></div>
+                    <div class="avatar">
+                        <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
+                    </div>
+                    <div class="notice-content">
+                        <div class="username">{{(convertirJson(comentario)).user}}</div>
+                        <div class="user-id">{{(convertirJson(comentario)).comment}}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="notice-content">
-                <div class="username">Jessica Sanders</div>
-                <div class="user-id">PITOOO asdasd a asd asd asd as dasd asdasd as a asdasd asd asd as da sd asd asd asd as dasdas asd asd asdasd as asd asdas d asd asd asd as dasd asd asd asdasd asd asd asd as das d asdasdasd asd asd asdasd asd asd a da sd asd asd asd asd asd as da sdas d asdasdasd as da sd asd asd asd</div>
-            </div>
-        </button>
-    </div>
-    <div class="comentario">
-        <button id="btn-message" class="button-message">
-            <div class="content-avatar">
-                <div class="status-user"></div>
-                <div class="avatar">
-                    <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
-                </div>
-            </div>
-            <div class="notice-content">
-                <div class="username">Jessica Sanders</div>
-                <div class="user-id">PITOOO asdasd a asd asd asd as dasd asdasd as a asdasd asd asd as da sd asd asd asd as dasdas asd asd asdasd as asd asdas d asd asd asd as dasd asd asd asdasd asd asd asd as das d asdasdasd asd asd asdasd asd asd a da sd asd asd asd asd asd as da sdas d asdasdasd as da sd asd asd asd</div>
-            </div>
-        </button>
-    </div>
-    <div class="comentario">
-        <button id="btn-message" class="button-message">
-            <div class="content-avatar">
-                <div class="status-user"></div>
-                <div class="avatar">
-                    <svg class="user-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,12.5c-3.04,0-5.5,1.73-5.5,3.5s2.46,3.5,5.5,3.5,5.5-1.73,5.5-3.5-2.46-3.5-5.5-3.5Zm0-.5c1.66,0,3-1.34,3-3s-1.34-3-3-3-3,1.34-3,3,1.34,3,3,3Z"></path></svg>
-                </div>
-            </div>
-            <div class="notice-content">
-                <div class="username">Jessica Sanders</div>
-                <div class="user-id">PITOOO asdasd a asd asd asd as dasd asdasd as a asdasd asd asd as da sd asd asd asd as dasdas asd asd asdasd as asd asdas d asd asd asd as dasd asd asd asdasd asd asd asd as das d asdasdasd asd asd asdasd asd asd a da sd asd asd asd asd asd as da sdas d asdasdasd as da sd asd asd asd</div>
-            </div>
-        </button>
-    </div>
+            </button>
+        </div>
+    }
+    
 </div>

@@ -3,11 +3,12 @@ import { SupabaseService } from '../services/supabase.service';
 import { CommonModule } from '@angular/common';
 import { RecetaComponent } from '../receta/receta.component';
 import { ClickOutsideDirective } from '../directives/click-outside.directive';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RecetaComponent, ClickOutsideDirective],
+  imports: [CommonModule, RecetaComponent, ClickOutsideDirective, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -15,18 +16,24 @@ export class HomeComponent implements AfterViewInit{
   supabase = inject(SupabaseService);
   recetas!: any
   recetasMostrar: any[] = [];
-  recetasLimit = 6;
-  imagenPrueba! : string | boolean;
-  @ViewChild('observer') observer!: ElementRef;
   recetaSeleccionada : any;
+  recetasLimit = 6;
+  busqueda : string = "";
+  imagenPrueba! : string | boolean;
   flagReceta : boolean = false;
   flagAnim : boolean = false;
+  @ViewChild('observer') observer!: ElementRef;
+  
+  
   constructor(){}
 
   async ngAfterViewInit() {
     this.recetas = await this.supabase.getTodasRecetas();
     this.cargarRecetas();
     this.setupIntersectionObserver();
+
+    let a  = await this.supabase.getReceta("Ensalada polluda");
+    console.log(a)
   }
 
   cargarRecetas() {
@@ -34,6 +41,21 @@ export class HomeComponent implements AfterViewInit{
     const nuevasRecetas = this.recetas.slice(this.recetasMostrar.length, this.recetasMostrar.length + this.recetasLimit);
     this.recetasMostrar = [...this.recetasMostrar, ...nuevasRecetas];
     console.log(this.recetasMostrar)
+  }
+
+  async ordernarRecetas(atributo:string, ascending:boolean = true){
+    this.recetas = await this.supabase.getTodasRecetas(atributo, ascending);
+    this.recetasMostrar = [];
+    this.cargarRecetas();
+  }
+
+  async ordernarRecetasRandom(){
+    for (let i = this.recetas.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)); 
+      [this.recetas[i], this.recetas[j]] = [this.recetas[j], this.recetas[i]]; 
+    }
+    this.recetasMostrar = [];
+    this.cargarRecetas();
   }
 
   setupIntersectionObserver() {
@@ -49,12 +71,11 @@ export class HomeComponent implements AfterViewInit{
   SeleccionarReceta(receta:any){
     this.recetaSeleccionada = receta;
     this.flagReceta = true;
+  }
 
-    const buttonElement = document.getElementById("fondo");
-    if (buttonElement) 
-      // buttonElement.style.overflowY = "hidden";
-    
-    console.log(receta)
+  async likearReceta(receta:any){
+    let recetaActualizada : any = await this.supabase.updateLike(receta.id, receta.likes);
+    receta.likes = recetaActualizada[0].likes;
   }
 
   async filtrarRecetas(ingredientes:string[]){
@@ -101,5 +122,20 @@ export class HomeComponent implements AfterViewInit{
     console.log(flag)
   }
 
-  
+  mostrarIngredientes(){
+    const buttonElement = document.getElementById("ingredientes");
+    if (buttonElement)
+      buttonElement.style.height = buttonElement.style.height != "50px" ? '50px' : 'auto';   
+  }
+
+  async buscar(event :  KeyboardEvent){
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Evita el salto de línea
+      this.recetas = await this.supabase.getReceta(this.busqueda);
+      this.recetasMostrar = [];
+      this.cargarRecetas();
+      this.busqueda = "";
+    }
+  }
+
 }

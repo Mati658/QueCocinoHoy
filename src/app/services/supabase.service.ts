@@ -11,11 +11,15 @@ export class SupabaseService {
   supabase = createClient(this.supabaseUrl, this.supabaseKey);
 
   constructor() { }
-  
-  async getTodasRecetas(){
+  /**
+   * 
+   * @param ordenarPor Atributo por el cual se quiera ordenar
+   */
+  async getTodasRecetas(ordenarPor:string = "id", ascending:boolean = true){
     let data = (await this.supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name)')).data
+      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
+      .order(ordenarPor, {ascending: ascending})).data
     
     if (data != null)     
       return data;
@@ -27,7 +31,7 @@ export class SupabaseService {
     let data = (await this.supabase
       .from('recetas')
       .select('id, name, description, imagenes')
-      .eq(typeof(receta) == 'number' ? 'id' : 'name', receta)).data
+      .ilike(typeof(receta) == 'number' ? 'id' : 'name',`%${receta}%`)).data
 
     if (data != null)  
       return data;
@@ -100,6 +104,36 @@ export class SupabaseService {
     if (data != null)     
       return data;
     
+    return false;
+  }
+
+  async updateLike(receta:number, like:number){
+    console.log(receta, like++)
+    let data = (await this.supabase
+      .from('recetas')
+      .update({likes: like++})
+      .eq('id', receta)
+      .select()).data
+
+
+    console.log(data);
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
+  async updateComentario(receta:number, comentario:string, user:any, comentariosOld:any[]){
+    let data = (await this.supabase
+      .from('recetas')
+      .update({comments: [...comentariosOld,{user:user.name, imagen:user.imagen, comentario:comentario}]})
+      .eq('id', receta)
+      .select()).data
+
+
+    if (data != null)  
+      return data;
+
     return false;
   }
 }

@@ -11,23 +11,24 @@
     </div>
 
     <div class="container-input">
-        <input type="text" placeholder="Search" name="text" class="input">
+        <input type="text" placeholder="Buscar" name="text" class="input" [(ngModel)]="busqueda" (keydown)="buscar($event)">
         <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
           <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fill-rule="evenodd"></path>
       </svg>
     </div>
 
     <div class="btn-container">
-        <button>Más recientes</button>
-        <button>Likes</button>
-        <button>Puntación</button>
+        <button (click)="ordernarRecetas('updated_at')">Más recientes</button>
+        <button (click)="ordernarRecetas('likes', false)">Likes</button>
+        <button (click)="ordernarRecetas('stars', false)">Puntación</button>
+        <button (click)="ordernarRecetasRandom()">Random</button>
     </div>
 
     <div class="recetas-container" *ngIf="recetasMostrar!=[]">
         @for (receta of recetasMostrar; track $index) {
-            <div class="card" (click)="SeleccionarReceta(receta)">
-                <img [src]="receta.imagenes[0]" class="img-feed">
-                <h3 class="receta-name-feed rouge-script truncate-multiline" *ngIf="receta!=null">{{receta.name}}</h3>
+            <div class="card">
+                <img [src]="receta.imagenes[0]" class="img-feed" (click)="SeleccionarReceta(receta)">
+                <h3 class="receta-name-feed rouge-script truncate-multiline" *ngIf="receta!=null" (click)="SeleccionarReceta(receta)">{{receta.name}}</h3>
                 
                 <div class="rating">
                     <input value="5" [name]="'rate'+receta.id+ $index+4" [id]="'star'+receta.id+ $index+4" type="radio" disabled [checked]="false">
@@ -42,7 +43,7 @@
                     <label title="text" [for]="'star'+receta.id+ $index"></label>
                 </div>
 
-                <div class="heart-container">
+                <div class="heart-container" (click)="likearReceta(receta)">
                     <input type="checkbox" class="checkbox" id="Give-It-An-Id">
                     <div class="svg-container">
                         <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +63,7 @@
                             <polygon points="80,80 70,70"></polygon>
                         </svg>
                     </div>
-                    <h5 class="likes">54</h5>
+                    <h5 class="likes">{{receta.likes}}</h5>
                 </div> 
 
                 <label class="ui-bookmark">
@@ -83,4 +84,15 @@
     <div #observer class="observer"></div>
 
 </div>
+
+<div class="filtro-card" id="ingredientes" >
+    <div class="chat-header" (click)="mostrarIngredientes()">Ingredientes</div>
+    <div class="chat-window">
+        <ul class="message-list"></ul>
+    </div>
+    <div class="chat-input">
+        <input type="text" class="message-input" placeholder="Filtre por ingredientes">
+    </div>
+</div>
+    
 

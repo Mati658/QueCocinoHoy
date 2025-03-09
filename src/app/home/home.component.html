@@ -10,18 +10,40 @@
         <h1 class="titulo rouge-script">¡Qué Cocino Hoy?</h1>
     </div>
 
-    <div class="container-input">
-        <input type="text" placeholder="Buscar" name="text" class="input" [(ngModel)]="busqueda" (keydown)="buscar($event)">
+    <div class="container-input" (click)="flagRecetaCard=true">
+        <input type="text" placeholder="Buscar" name="text" class="input" [(ngModel)]="busqueda" (keydown)="buscar('',$event)">
         <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
           <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fill-rule="evenodd"></path>
-      </svg>
+        </svg>
+
+    </div>
+    <div class="lista-recetas scroll-1" *ngIf="busqueda!='' && flagRecetaCard" appClickOutside (outside)="flagRecetaCard = false">
+        @for (receta of recetasTotales | filter : busqueda; track $index) {
+            <div class="card-receta" (click)="buscar(receta.name)">
+                <svg class="wave" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M0,256L11.4,240C22.9,224,46,192,69,192C91.4,192,114,224,137,234.7C160,245,183,235,206,213.3C228.6,192,251,160,274,149.3C297.1,139,320,149,343,181.3C365.7,213,389,267,411,282.7C434.3,299,457,277,480,250.7C502.9,224,526,192,549,181.3C571.4,171,594,181,617,208C640,235,663,277,686,256C708.6,235,731,149,754,122.7C777.1,96,800,128,823,165.3C845.7,203,869,245,891,224C914.3,203,937,117,960,112C982.9,107,1006,181,1029,197.3C1051.4,213,1074,171,1097,144C1120,117,1143,107,1166,133.3C1188.6,160,1211,224,1234,218.7C1257.1,213,1280,139,1303,133.3C1325.7,128,1349,192,1371,192C1394.3,192,1417,128,1429,96L1440,64L1440,320L1428.6,320C1417.1,320,1394,320,1371,320C1348.6,320,1326,320,1303,320C1280,320,1257,320,1234,320C1211.4,320,1189,320,1166,320C1142.9,320,1120,320,1097,320C1074.3,320,1051,320,1029,320C1005.7,320,983,320,960,320C937.1,320,914,320,891,320C868.6,320,846,320,823,320C800,320,777,320,754,320C731.4,320,709,320,686,320C662.9,320,640,320,617,320C594.3,320,571,320,549,320C525.7,320,503,320,480,320C457.1,320,434,320,411,320C388.6,320,366,320,343,320C320,320,297,320,274,320C251.4,320,229,320,206,320C182.9,320,160,320,137,320C114.3,320,91,320,69,320C45.7,320,23,320,11,320L0,320Z"
+                    fill-opacity="1"
+                  ></path>
+                </svg>
+              
+                <div class="icon-container">
+                  <img [src]="receta.imagenes[0]" class="img-buscador">
+                </div>
+                <div class="message-text-container">
+                  <p class="message-text">{{receta.name}}</p>
+                  <!-- <p class="sub-text">We think you should check it</p> -->
+                </div>
+                
+            </div>
+        }
     </div>
 
     <div class="btn-container">
-        <button (click)="ordernarRecetas('updated_at')">Más recientes</button>
-        <button (click)="ordernarRecetas('likes', false)">Likes</button>
-        <button (click)="ordernarRecetas('stars', false)">Puntación</button>
-        <button (click)="ordernarRecetasRandom()">Random</button>
+        <button (click)="ordernarRecetas('updated_at')" class="button-ordenar">Más recientes</button>
+        <button (click)="ordernarRecetas('likes', false)" class="button-ordenar">Likes</button>
+        <button (click)="ordernarRecetas('stars', false)" class="button-ordenar">Puntación</button>
+        <button (click)="ordernarRecetasRandom()" class="button-ordenar">Random</button>
     </div>
 
     <div class="recetas-container" *ngIf="recetasMostrar!=[]">
@@ -87,11 +109,24 @@
 
 <div class="filtro-card" id="ingredientes" >
     <div class="chat-header" (click)="mostrarIngredientes()">Ingredientes</div>
-    <div class="chat-window">
-        <ul class="message-list"></ul>
+    <div class="chat-window scroll-1">
+        @for (ingrediente of ingredientes; track $index) {
+            <ul class="message-list">
+                <button type="button" class="button-ing" (click)="eliminarIngrediente(ingrediente)">
+                    <span class="button__text">{{ingrediente}}</span>
+                    <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="512" viewBox="0 0 512 512" height="512" class="svg"><title></title><path style="fill:none;stroke:#323232;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"></path><line y2="112" y1="112" x2="432" x1="80" style="stroke:#323232;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"></line><path style="fill:none;stroke:#323232;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"></path><line y2="400" y1="176" x2="256" x1="256" style="fill:none;stroke:#323232;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></line><line y2="400" y1="176" x2="192" x1="184" style="fill:none;stroke:#323232;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></line><line y2="400" y1="176" x2="320" x1="328" style="fill:none;stroke:#323232;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></line></svg></span>
+                  </button>
+            </ul>
+        }
     </div>
-    <div class="chat-input">
-        <input type="text" class="message-input" placeholder="Filtre por ingredientes">
+    <div class="lista-ingredientes scroll-1" *ngIf="ingrediente!='' && flagIngrediente">
+        @for (itemIngrediente of ingredientesTotales | filter : ingrediente; track $index) {
+            <button class="ing-filtrado" (click)="aniadirIngrediente(itemIngrediente.name)">{{itemIngrediente.name}}</button>
+        }
+
+    </div>
+    <div class="chat-input scroll-1">
+        <input type="text" class="message-input" placeholder="Filtre por ingredientes" [(ngModel)]="ingrediente">
     </div>
 </div>
     

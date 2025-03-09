@@ -4,24 +4,33 @@ import { CommonModule } from '@angular/common';
 import { RecetaComponent } from '../receta/receta.component';
 import { ClickOutsideDirective } from '../directives/click-outside.directive';
 import { FormsModule } from '@angular/forms';
+import { FilterPipe } from '../pipes/filter.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RecetaComponent, ClickOutsideDirective, FormsModule],
+  imports: [CommonModule, RecetaComponent, ClickOutsideDirective, FormsModule, FilterPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements AfterViewInit{
   supabase = inject(SupabaseService);
-  recetas!: any
+  recetas: any
+  recetasTotales : any;
+  ingredientesTotales : any;
   recetasMostrar: any[] = [];
+  ingredientes : string[] = [];
   recetaSeleccionada : any;
   recetasLimit = 6;
   busqueda : string = "";
+  ingrediente : string = "";
   imagenPrueba! : string | boolean;
   flagReceta : boolean = false;
   flagAnim : boolean = false;
+  flagRecetaCard : boolean = false;
+  flagIngrediente : boolean = true;
+  versionActualEliminar : number = 0;
+  versionActualAniadir : number = 0;
   @ViewChild('observer') observer!: ElementRef;
   
   
@@ -29,11 +38,11 @@ export class HomeComponent implements AfterViewInit{
 
   async ngAfterViewInit() {
     this.recetas = await this.supabase.getTodasRecetas();
+    this.recetasTotales = this.recetas
+    this.ingredientesTotales = await this.supabase.getTodosIngredientes();
+    console.log(this.ingredientesTotales)
     this.cargarRecetas();
     this.setupIntersectionObserver();
-
-    let a  = await this.supabase.getReceta("Ensalada polluda");
-    console.log(a)
   }
 
   cargarRecetas() {
@@ -79,29 +88,34 @@ export class HomeComponent implements AfterViewInit{
   }
 
   async filtrarRecetas(ingredientes:string[]){
-    this.supabase.getRecetasByIngredientes(ingredientes).then(async res=>{
+    await this.supabase.getRecetasByIngredientes(ingredientes).then(async res=>{
+      console.log(res)
+      if (res == false) {
+        this.recetas = []
+        return
+      }
       let ing = res
       let recetas : any = []
-
+      
       for (const element of ing) {
         let data : any = {};
-        let receta : any = await this.supabase.getReceta(element.recipe_id);
-        let ingredientes : any = await this.supabase.getIngredientesDeReceta(element.recipe_id);
-        
-        data.nombre = receta[0].name;
-        data.description = receta[0].description;
-        data.time = receta[0].time;
-        data.imagen = receta[0].imagenes;
-        for (let i = 0; i < ingredientes.length; i++) {
-          const element = ingredientes[i];
-          if(!data.ingredientes)
-            data.ingredientes = [{ing:element.ingredient_id.name, cant:element.cantidad}];
-          else
-            data.ingredientes = [...data.ingredientes,{ing:element.ingredient_id.name, cant:element.cantidad}]
-        }
+        let receta : any = await this.supabase.getRecetaId(element.recipe_id);
+        data = receta[0]
+
+        //Obtener los ingredientes de cada receta
+        // let ingredientes : any = await this.supabase.getIngredientesDeReceta(element.recipe_id);
+        // for (let i = 0; i < ingredientes.length; i++) {
+        //   const element = ingredientes[i];
+        //   if(!data.ingredientes)
+        //     data.ingredientes = [{ing:element.ingredient_id.name, cant:element.cantidad}];
+        //   else
+        //     data.ingredientes = [...data.ingredientes,{ing:element.ingredient_id.name, cant:element.cantidad}];
+        // }
+
+
         recetas.push(data)
       }
-      console.log(recetas)
+      this.recetas = recetas;
     });
   }
 
@@ -124,18 +138,62 @@ export class HomeComponent implements AfterViewInit{
 
   mostrarIngredientes(){
     const buttonElement = document.getElementById("ingredientes");
-    if (buttonElement)
-      buttonElement.style.height = buttonElement.style.height != "50px" ? '50px' : 'auto';   
+    if (buttonElement){
+      buttonElement.style.height = buttonElement.style.height != "40px" ? '40px' : 'auto';  
+      this.flagIngrediente = !this.flagIngrediente;
+    }
+
   }
 
-  async buscar(event :  KeyboardEvent){
-    if (event.key === 'Enter') {
-      event.preventDefault(); // Evita el salto de línea
-      this.recetas = await this.supabase.getReceta(this.busqueda);
+  async buscar(receta : string = "", event? :  KeyboardEvent){
+    console.log(receta);
+    if (event?.key == 'Enter' || receta != "") {
+      event?.preventDefault(); // Evita el salto de línea
+      this.recetas = await this.supabase.getRecetaString(receta != "" ? receta : this.busqueda);
       this.recetasMostrar = [];
       this.cargarRecetas();
       this.busqueda = "";
+      this.ingredientes = [];
     }
+  }
+
+  async aniadirIngrediente(ingrediente : string){
+    this.versionActualAniadir++; 
+    let version = this.versionActualAniadir;
+
+    this.ingredientes.push(ingrediente); 
+
+    this.ingrediente = "";
+    await this.filtrarRecetas(this.ingredientes)
+
+    if (version !== this.versionActualAniadir) return;
+
+    console.log(this.recetas)
+    this.recetasMostrar = [];
+    this.cargarRecetas();
+
+    
+  }
+
+  async eliminarIngrediente(ingrediente:string){
+    this.versionActualEliminar++; 
+    let version = this.versionActualEliminar;
+
+    let i = this.ingredientes.findIndex((x) => x === ingrediente)
+    this.ingredientes.splice(i,1)
+  
+    if (this.ingredientes.length == 0) {
+      this.recetas = await this.supabase.getTodasRecetas();
+      if (version !== this.versionActualEliminar) return;
+      this.recetasMostrar = [];
+      this.cargarRecetas();
+      return 
+    }
+    await this.filtrarRecetas(this.ingredientes)
+    if (version !== this.versionActualEliminar) return;
+    console.log(this.recetas)
+    this.recetasMostrar = [];
+    this.cargarRecetas();
   }
 
 }

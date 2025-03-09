@@ -8,4 +8,10 @@ export const routes: Routes = [
                 (c) => c.HomeComponent
             )
     },
+    {
+        path: '**', loadComponent: () =>
+            import("./error/error.component").then(
+                (c) => c.ErrorComponent
+            )
+    }
 ];

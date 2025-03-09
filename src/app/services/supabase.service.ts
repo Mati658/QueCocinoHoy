@@ -27,15 +27,38 @@ export class SupabaseService {
     return false;
   }
 
-  async getReceta(receta: string | number){
+  async getRecetaString(receta: string | number){
     let data = (await this.supabase
       .from('recetas')
-      .select('id, name, description, imagenes')
-      .ilike(typeof(receta) == 'number' ? 'id' : 'name',`%${receta}%`)).data
+      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
+      .ilike('name',`%${receta}%`)).data
 
     if (data != null)  
       return data;
 
+    return false;
+  }
+
+  async getRecetaId(receta: number){
+    let data = (await this.supabase
+      .from('recetas')
+      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
+      .eq('id',receta)).data
+
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
+  async getTodosIngredientes(){
+    let data = (await this.supabase
+      .from('ingredientes')
+      .select('*')).data
+    
+    if (data != null)     
+      return data;
+    
     return false;
   }
 
@@ -68,7 +91,8 @@ export class SupabaseService {
 
     for (const ingrediente of ingredientes) {
       const res = await this.getIngrediente(ingrediente);
-      if (res !== false) {
+      if (res != false) {
+        console.log(res)
         idIngredientes.push(res[0].id);
       }
     }

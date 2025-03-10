@@ -16,6 +16,48 @@
     padding-bottom: 5%;
 }
 
+.header{
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 700px;
+  width: 70%;
+  height: 50px;
+  background-color: #F6F6F6;
+  min-width: 700px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.header .titulo{
+  font-size: 5vh;
+  position: relative;
+  left: 10px;
+}
+
+.cont-btn-header{
+  width: 100%;
+  display: flex;
+  position: absolute;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-header{
+  background-color:#00000000;
+  outline: none;
+  position: relative;
+  border: none;
+  right: 0;
+  cursor: pointer;
+  transition: 100ms;
+}
+
+.btn-header:active{
+  transform: translateY(5px);
+}
+
 .titulo-container{
     width: 100%;
     display: flex;
@@ -25,6 +67,13 @@
 .titulo{
     font-size: 15vh;
     color: #A69393;
+    z-index: 1;
+}
+
+.logo{
+  position: absolute;
+  top: 50px;
+  z-index: 0;
 }
 
 .btn-container{
@@ -79,8 +128,7 @@
     position: fixed;
     display: flex;
     flex-direction: column;
-    margin-top: 2.5%;
-    // left: 25%;
+    margin-top: 70px;
     max-width: 700px;
     height: auto;
     height: 85%;
@@ -106,6 +154,19 @@
     overflow-y: hidden;
 }
 
+.modal-login{
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  margin-top: 70px;
+  max-width: 700px;
+  height: auto;
+  height: 85%;
+  min-width: 700px;
+  background-color:#F6F6F6;
+  z-index: 10;
+  align-self: center;
+}
 //-----------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------Buscador---------------------------------------------------------------
 .container-input {
@@ -318,7 +379,7 @@
   
   .rating:not(:checked) > label {
     float: right;
-    cursor: pointer;
+    cursor: default;
     font-size: 40px;
     color: #666; 
     position: relative;
@@ -330,11 +391,11 @@
     content: '★';
   }
   
-  .rating > input:checked + label:hover,
-  .rating > input:checked + label:hover ~ label,
-  .rating > input:checked ~ label:hover,
-  .rating > input:checked ~ label:hover ~ label,
-  .rating > label:hover ~ input:checked ~ label {
+  .rating > input:checked,
+  .rating > input:checked ~ label,
+  .rating > input:checked,
+  .rating > input:checked ~ label,
+  .rating > input:checked ~ label {
     color: #e58e09;
   }
   
@@ -362,7 +423,7 @@
 }
 
 .chat-header {
-  background-color: #333;
+  background-color: #401B01;
   color: #fff;
   padding: 10px;
   font-size: 18px;
@@ -373,6 +434,7 @@
 .chat-window {
   height: 220px;
   overflow-y: scroll;
+  background-color: #A69393;
 }
 
 .message-list {
@@ -403,6 +465,7 @@
   display: flex;
   align-items: center;
   padding: 10px;
+  background-color: #A69393;
   border-top: 1px solid #ccc;
 }
 
@@ -411,6 +474,7 @@
   border: none;
   outline: none;
   padding: 5px;
+  background-color: #A69393;
   font-size: 14px;
 }
 //-----------------------------------------------------------------------------------------------------------------------

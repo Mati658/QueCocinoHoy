@@ -5,16 +5,19 @@ import { RecetaComponent } from '../receta/receta.component';
 import { ClickOutsideDirective } from '../directives/click-outside.directive';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from '../pipes/filter.pipe';
+import { LoginComponent } from '../login/login.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RecetaComponent, ClickOutsideDirective, FormsModule, FilterPipe],
+  imports: [CommonModule, RecetaComponent, ClickOutsideDirective, FormsModule, FilterPipe, LoginComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements AfterViewInit{
   supabase = inject(SupabaseService);
+  auth = inject(AuthService);
   recetas: any
   recetasTotales : any;
   ingredientesTotales : any;
@@ -25,8 +28,9 @@ export class HomeComponent implements AfterViewInit{
   busqueda : string = "";
   ingrediente : string = "";
   imagenPrueba! : string | boolean;
-  flagReceta : boolean = false;
   flagAnim : boolean = false;
+  flagLogin : boolean = false
+  flagReceta : boolean = false;
   flagRecetaCard : boolean = false;
   flagIngrediente : boolean = true;
   versionActualEliminar : number = 0;

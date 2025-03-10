@@ -1,26 +1,25 @@
 import { Injectable } from '@angular/core';
-import { createClient } from '@supabase/supabase-js'
 import { environment } from '../../environments/environment.development';
+import supabase from '../supabaseClient'; // Importamos la instancia única
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class SupabaseService {
   supabaseUrl : string = environment.URL;
   supabaseKey : string = environment.SUPABASE_KEY;
-  supabase = createClient(this.supabaseUrl, this.supabaseKey);
-
+  // supabase = su;
   constructor() { }
   /**
    * 
    * @param ordenarPor Atributo por el cual se quiera ordenar
    */
   async getTodasRecetas(ordenarPor:string = "id", ascending:boolean = true){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('recetas')
       .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
       .order(ordenarPor, {ascending: ascending})).data
-    
     if (data != null)     
       return data;
     
@@ -28,7 +27,7 @@ export class SupabaseService {
   }
 
   async getRecetaString(receta: string | number){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('recetas')
       .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
       .ilike('name',`%${receta}%`)).data
@@ -40,7 +39,7 @@ export class SupabaseService {
   }
 
   async getRecetaId(receta: number){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('recetas')
       .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
       .eq('id',receta)).data
@@ -52,7 +51,7 @@ export class SupabaseService {
   }
 
   async getTodosIngredientes(){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('ingredientes')
       .select('*')).data
     
@@ -63,7 +62,7 @@ export class SupabaseService {
   }
 
   async getIngrediente(ingrediente: string){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('ingredientes')
       .select('id, name')
       .eq('name', ingrediente)).data
@@ -75,7 +74,7 @@ export class SupabaseService {
   }
 
   async getImagen(receta:number){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('imagenes')
       .select('url')
       .eq('receta_id', receta)).data
@@ -106,7 +105,7 @@ export class SupabaseService {
   async getRecetasByIngredientes(ingredientes:string[]){
     let idIngredientes :any = await this.getListaIngredientes(ingredientes);
 
-    const { data, error } = await this.supabase
+    const { data, error } = await supabase
       .rpc('get_recipes_by_ingredients', {
         _ingredients: idIngredientes 
       });
@@ -120,7 +119,7 @@ export class SupabaseService {
   }
 
   async getIngredientesDeReceta(receta: number){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('ing-rec')
       .select('cantidad, ingredient_id (name), recipe_id (name)')
       .eq('recipe_id', receta)).data
@@ -133,7 +132,7 @@ export class SupabaseService {
 
   async updateLike(receta:number, like:number){
     console.log(receta, like++)
-    let data = (await this.supabase
+    let data = (await supabase
       .from('recetas')
       .update({likes: like++})
       .eq('id', receta)
@@ -148,7 +147,7 @@ export class SupabaseService {
   }
 
   async updateComentario(receta:number, comentario:string, user:any, comentariosOld:any[]){
-    let data = (await this.supabase
+    let data = (await supabase
       .from('recetas')
       .update({comments: [...comentariosOld,{user:user.name, imagen:user.imagen, comentario:comentario}]})
       .eq('id', receta)

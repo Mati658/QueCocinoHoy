@@ -1,0 +1,11 @@
+<div class="container">
+    <div class="fondo"></div>
+    <div class="card-client">
+        <div class="user-picture">
+            <img [src]="auth.usuario.identity_data.avatar_url" *ngIf="auth.usuario">
+        </div>
+        <p class="name-client" *ngIf="auth.usuario"> {{auth.usuario.identity_data.full_name}}
+            <span>{{auth.usuario.identity_data.email}}</span>
+        </p>
+    </div>
+</div>

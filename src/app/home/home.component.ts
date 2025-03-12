@@ -29,7 +29,6 @@ export class HomeComponent implements AfterViewInit{
   ingrediente : string = "";
   imagenPrueba! : string | boolean;
   flagAnim : boolean = false;
-  flagLogin : boolean = false
   flagReceta : boolean = false;
   flagRecetaCard : boolean = false;
   flagIngrediente : boolean = true;
@@ -131,13 +130,19 @@ export class HomeComponent implements AfterViewInit{
     return a;
   }
 
-  recibirFlag(flag : any){
+  recibirFlag(flag : any, elemento:string){
     this.flagAnim = !flag
     setTimeout(async () => {
-      this.flagReceta = !flag;
-    this.flagAnim = true;
+      switch (elemento) {
+        case 'receta':
+          this.flagReceta = !flag;          
+          break;
+        case 'login':
+          this.auth.flagLogin = !flag;
+          break;
+      }
+      this.flagAnim = true;
     }, 500);
-    console.log(flag)
   }
 
   mostrarIngredientes(){

@@ -37,6 +37,9 @@ export class LoginComponent implements AfterViewInit {
     const googleButton = document.getElementById('google-signin-btn');
     if (googleButton) {
       window.google.accounts.id.renderButton(googleButton, { theme: 'outline', size: 'large' });
+      // googleButton.addEventListener("click", () => {
+      //   window.google.accounts.id.prompt();
+      // });
     } else {
       console.error('No se encontró el elemento del botón de Google.');
     }
@@ -48,8 +51,6 @@ export class LoginComponent implements AfterViewInit {
       console.error("Error: this.auth no está definido");
       return;
     }
-    this.auth.handleSignInWithGoogle(response).then(res=>{
-      console.log(res)
-    });
+    this.auth.handleSignInWithGoogle(response)
   }
 }

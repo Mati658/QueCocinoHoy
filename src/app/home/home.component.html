@@ -1,22 +1,13 @@
-<div class="blur" *ngIf="flagReceta || flagLogin"></div>
+<div class="blur" *ngIf="flagReceta || auth.flagLogin"></div>
 <div class="linea-guia" id="fondo">
-    <div class="header">
-        <h1 class="titulo rouge-script">¡Qué Cocino Hoy?</h1>
-        <div class="cont-btn-header">
-            <button class="btn-header">¿Quién Soy?</button>
-            <button class="btn-header">Contacto</button>
-            <button class="btn-header">Perfil</button>
-            <button class="btn-header"(click)="flagLogin=true">Login</button>
-        </div>
-    </div>
     <!-- #region VENTANA MODAL RECETA -->
-    <div class="modal-receta" *ngIf="flagReceta!=false" appClickOutside (outside)="recibirFlag($event)">
+    <div class="modal-receta" *ngIf="flagReceta!=false" appClickOutside (outside)="recibirFlag($event, 'receta')">
         <app-receta [recetaRecibida]="recetaSeleccionada"></app-receta>
     </div>
     <!-- #endregion -->
 
     <!-- #region VENTANA MODAL LOGIN -->
-    <div class="modal-login" *ngIf="flagLogin!=false" appClickOutside (outside)="flagLogin = false">
+    <div class="modal-login" *ngIf="auth.flagLogin!=false" appClickOutside (outside)="recibirFlag($event, 'login')">
         <app-login></app-login>
     </div>
     <!-- #endregion -->

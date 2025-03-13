@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import supabase from '../supabaseClient'; // Importamos la instancia única
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,6 @@ import supabase from '../supabaseClient'; // Importamos la instancia única
 export class SupabaseService {
   supabaseUrl : string = environment.URL;
   supabaseKey : string = environment.SUPABASE_KEY;
-  // supabase = su;
   constructor() { }
   /**
    * 
@@ -131,10 +131,10 @@ export class SupabaseService {
   }
 
   async updateLike(receta:number, like:number){
-    console.log(receta, like++)
+    console.log(receta, like)
     let data = (await supabase
       .from('recetas')
-      .update({likes: like++})
+      .update({likes: like})
       .eq('id', receta)
       .select()).data
 
@@ -157,6 +157,55 @@ export class SupabaseService {
     if (data != null)  
       return data;
 
+    return false;
+  }
+
+  async altaUsuario(usuario:any){
+    let data = (await supabase
+    .from('usuarios')
+    .insert([
+      { name: usuario.identity_data.full_name, mail: usuario.identity_data.email, imagen:usuario.identity_data.avatar_url},
+    ])
+    .select()).data
+
+    console.log(data)
+    if (data != null)  
+      return true;
+
+    return false;
+  }
+
+  async getUsuario(mail:string){
+    let data = (await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('mail',mail)).data
+
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
+  async updateLikesUsuario(receta_id:number, user_id:number, listaLikes:any[], dislike:boolean = false){
+    let data : any;
+    if(!dislike){
+      data = (await supabase
+        .from('usuarios')
+        .update({likeados: [...listaLikes,receta_id]})
+        .eq('id', user_id)
+        .select()).data
+    }else{
+      data = (await supabase
+        .from('usuarios')
+        .update({likeados: listaLikes})
+        .eq('id', user_id)
+        .select()).data
+    }
+        
+    console.log(data);
+    if (data != null)  
+      return data;
     return false;
   }
 }

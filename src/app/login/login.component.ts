@@ -18,6 +18,7 @@ declare global {
 })
 export class LoginComponent implements AfterViewInit {
   auth = inject(AuthService);
+  supabase = inject(SupabaseService);
 
   ngAfterViewInit(): void {
     setTimeout(() => this.loadGoogleSignIn(), 500);
@@ -51,6 +52,11 @@ export class LoginComponent implements AfterViewInit {
       console.error("Error: this.auth no está definido");
       return;
     }
-    this.auth.handleSignInWithGoogle(response)
+    this.auth.handleSignInWithGoogle(response).then(res=>{
+      if (this.auth.usuario) {
+        console.log("AAaAAAAAA")
+        this.supabase.altaUsuario(this.auth.usuario);
+      }
+    })
   }
 }

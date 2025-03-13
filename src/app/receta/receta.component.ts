@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-receta',
@@ -11,7 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './receta.component.scss'
 })
 export class RecetaComponent {
-  supabase = inject(SupabaseService); 
+  supabase = inject(SupabaseService);   
+  auth = inject(AuthService);
   receta : any;
   ingredientes : any[] = [];
   imagen : string = "";
@@ -36,8 +38,25 @@ export class RecetaComponent {
   }
 
   async likearReceta(){
-    let recetaActualizada : any = await this.supabase.updateLike(this.receta.id, this.receta.likes);
+    this.auth.usuarioDB.likeados = this.auth.usuarioDB.likeados != null ? this.auth.usuarioDB.likeados : []
+    let data : any = await this.supabase.updateLikesUsuario(this.receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados)
+    this.auth.usuarioDB.likeados = data[0].likeados;
+    let recetaActualizada : any = await this.supabase.updateLike(this.receta.id, this.receta.likes+=1);
     this.receta.likes = recetaActualizada[0].likes;
+  }
+
+  async dislikeReceta(){
+    let i = this.auth.usuarioDB.likeados.findIndex((x:any) => x === this.receta.id)
+    console.log(this.receta.id)
+    console.log(this.auth.usuarioDB.likeados.splice(i,1))
+    console.log(this.auth.usuarioDB.likeados)
+    await this.supabase.updateLikesUsuario(this.receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados, true)
+    let recetaActualizada : any = await this.supabase.updateLike(this.receta.id, this.receta.likes-=1);
+    this.receta.likes = recetaActualizada[0].likes;
+  }
+
+  verificarLike(){
+    return this.auth.usuarioDB.likeados.includes(this.receta.id)
   }
 
   async subirComentario(){

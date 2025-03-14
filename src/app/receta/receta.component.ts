@@ -47,16 +47,30 @@ export class RecetaComponent {
 
   async dislikeReceta(){
     let i = this.auth.usuarioDB.likeados.findIndex((x:any) => x === this.receta.id)
-    console.log(this.receta.id)
-    console.log(this.auth.usuarioDB.likeados.splice(i,1))
-    console.log(this.auth.usuarioDB.likeados)
+    this.auth.usuarioDB.likeados.splice(i,1)
     await this.supabase.updateLikesUsuario(this.receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados, true)
     let recetaActualizada : any = await this.supabase.updateLike(this.receta.id, this.receta.likes-=1);
     this.receta.likes = recetaActualizada[0].likes;
   }
 
   verificarLike(){
-    return this.auth.usuarioDB.likeados.includes(this.receta.id)
+    return this.auth.usuarioDB.likeados?.includes(this.receta.id)
+  }
+
+  async saveReceta(){
+    this.auth.usuarioDB.guardados = this.auth.usuarioDB.guardados != null ? this.auth.usuarioDB.guardados : []
+    let data : any = await this.supabase.updateSavesUsuario(this.receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.guardados)
+    this.auth.usuarioDB.guardados = data[0].guardados;
+  }
+
+  async unsaveReceta(){
+    let i = this.auth.usuarioDB.guardados.findIndex((x:any) => x === this.receta.id)
+    this.auth.usuarioDB.guardados.splice(i,1)
+    await this.supabase.updateSavesUsuario(this.receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.guardados, true)
+  }
+
+  verificarSave(){
+    return this.auth.usuarioDB.guardados?.includes(this.receta.id)
   }
 
   async subirComentario(){

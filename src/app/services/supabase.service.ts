@@ -208,4 +208,26 @@ export class SupabaseService {
       return data;
     return false;
   }
+
+  async updateSavesUsuario(receta_id:number, user_id:number, listaSaves:any[], unsave:boolean = false){
+    let data : any;
+    if(!unsave){
+      data = (await supabase
+        .from('usuarios')
+        .update({guardados: [...listaSaves,receta_id]})
+        .eq('id', user_id)
+        .select()).data
+    }else{
+      data = (await supabase
+        .from('usuarios')
+        .update({guardados: listaSaves})
+        .eq('id', user_id)
+        .select()).data
+    }
+        
+    console.log(data);
+    if (data != null)  
+      return data;
+    return false;
+  }
 }

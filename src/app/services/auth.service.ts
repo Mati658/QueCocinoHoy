@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import supabase from '../supabaseClient'; // Importamos la instancia única
 import { NgZone } from '@angular/core';
 import { SupabaseService } from './supabase.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { SupabaseService } from './supabase.service';
 export class AuthService {
   supabaseService = inject(SupabaseService);
   ngZone = inject(NgZone);
+  router = inject(Router)
   supabaseUrl : string = environment.URL;
   supabaseKey : string = environment.SUPABASE_KEY;
   usuario : any;
@@ -36,9 +38,11 @@ export class AuthService {
     this.usuario = (await supabase.auth.getUserIdentities()).data?.identities[0]
     this.ngZone.run(()=>{});    
     console.log(this.usuario)
-    let userDB = await this.getId();
-    if( userDB != false){
-      this.usuarioDB = userDB[0]
+    if (this.usuario){
+      let userDB = await this.getId();
+      if( userDB != false){
+        this.usuarioDB = userDB[0]
+      }
     }
   }
 
@@ -48,6 +52,7 @@ export class AuthService {
 
   async signOut(){
     await supabase.auth.signOut();
+    window.location.reload();
   }
 
 }

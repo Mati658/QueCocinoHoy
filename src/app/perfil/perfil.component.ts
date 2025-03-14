@@ -15,4 +15,8 @@ export class PerfilComponent {
   constructor(){
     // console.log(this.auth.usuario)
   }
+
+  signOut(){
+    this.auth.signOut();
+  }
 }

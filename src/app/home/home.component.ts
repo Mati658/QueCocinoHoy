@@ -86,25 +86,63 @@ export class HomeComponent implements AfterViewInit{
   }
 
   async likearReceta(receta:any){
-    this.auth.usuarioDB.likeados = this.auth.usuarioDB.likeados != null ? this.auth.usuarioDB.likeados : []
-    let data : any = await this.supabase.updateLikesUsuario(receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados)
-    this.auth.usuarioDB.likeados = data[0].likeados;
-    let recetaActualizada : any = await this.supabase.updateLike(receta.id, receta.likes+=1);
-    receta.likes = recetaActualizada[0].likes;
+    if (this.verificarUsuario()) { 
+      this.auth.usuarioDB.likeados = this.auth.usuarioDB.likeados != null ? this.auth.usuarioDB.likeados : []
+      let data : any = await this.supabase.updateLikesUsuario(receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados)
+      this.auth.usuarioDB.likeados = data[0].likeados;
+      let recetaActualizada : any = await this.supabase.updateLike(receta.id, receta.likes+=1);
+      receta.likes = recetaActualizada[0].likes;
+    }
   }
 
   async dislikeReceta(receta:any){
-    let i = this.auth.usuarioDB.likeados.findIndex((x:any) => x === receta.id)
-    console.log(receta.id)
-    console.log(this.auth.usuarioDB.likeados.splice(i,1))
-    console.log(this.auth.usuarioDB.likeados)
-    await this.supabase.updateLikesUsuario(receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados, true)
-    let recetaActualizada : any = await this.supabase.updateLike(receta.id, receta.likes-=1);
-    receta.likes = recetaActualizada[0].likes;
+    if (this.verificarUsuario()) { 
+      let i = this.auth.usuarioDB.likeados.findIndex((x:any) => x === receta.id)
+      this.auth.usuarioDB.likeados.splice(i,1)
+      await this.supabase.updateLikesUsuario(receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.likeados, true)
+      let recetaActualizada : any = await this.supabase.updateLike(receta.id, receta.likes-=1);
+      receta.likes = recetaActualizada[0].likes;
+    }
   }
 
   verificarLike(receta_id:number){
-    return this.auth.usuarioDB.likeados.includes(receta_id)
+    if (!this.auth.usuario) {
+      this.auth.flagLogin = true;
+      const buttonElement = document.getElementById("Give-It-An-Id") as HTMLInputElement;
+      if (buttonElement){
+        buttonElement.checked = false;
+      }
+      return false
+    }
+    return this.auth.usuarioDB.likeados?.includes(receta_id)
+  }
+
+  async saveReceta(receta:any){
+    if (this.verificarUsuario()) {
+      this.auth.usuarioDB.guardados = this.auth.usuarioDB.guardados != null ? this.auth.usuarioDB.guardados : [];
+      let data : any = await this.supabase.updateSavesUsuario(receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.guardados);
+      this.auth.usuarioDB.guardados = data[0].guardados;
+    }
+  }
+
+  async unsaveReceta(receta:any){
+    if (this.verificarUsuario()) {
+      let i = this.auth.usuarioDB.guardados.findIndex((x:any) => x === receta.id);
+      this.auth.usuarioDB.guardados.splice(i,1);
+      await this.supabase.updateSavesUsuario(receta.id, this.auth.usuarioDB.id, this.auth.usuarioDB.guardados, true);
+    }
+  }
+
+  verificarSave(receta_id:number){
+    if (!this.auth.usuario) {
+      this.auth.flagLogin = true;
+      const buttonElement = document.getElementById("bookmark") as HTMLInputElement;
+      if (buttonElement){
+        buttonElement.checked = false;
+      }
+      return false
+    }
+    return this.auth.usuarioDB.guardados?.includes(receta_id);
   }
 
   async filtrarRecetas(ingredientes:string[]){
@@ -220,6 +258,13 @@ export class HomeComponent implements AfterViewInit{
     console.log(this.recetas)
     this.recetasMostrar = [];
     this.cargarRecetas();
+  }
+
+  verificarUsuario(){
+    if (this.auth.usuario) {
+      return true
+    }
+    return false;
   }
 
 }

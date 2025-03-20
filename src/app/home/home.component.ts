@@ -105,12 +105,13 @@ export class HomeComponent implements AfterViewInit{
     }
   }
 
-  verificarLike(receta_id:number){
-    if (!this.auth.usuario) {
+  verificarLike(receta_id:number, id_heart:number = 0){
+    if (!this.verificarUsuario()) {
       this.auth.flagLogin = true;
-      const buttonElement = document.getElementById("Give-It-An-Id") as HTMLInputElement;
+      const buttonElement = document.getElementById(`heart${id_heart}`) as HTMLInputElement;
       if (buttonElement){
         buttonElement.checked = false;
+        console.log("lol")
       }
       return false
     }
@@ -133,10 +134,10 @@ export class HomeComponent implements AfterViewInit{
     }
   }
 
-  verificarSave(receta_id:number){
-    if (!this.auth.usuario) {
+  verificarSave(receta_id:number, id_bookmark:number = 0){
+    if (!this.verificarUsuario()) {
       this.auth.flagLogin = true;
-      const buttonElement = document.getElementById("bookmark") as HTMLInputElement;
+      const buttonElement = document.getElementById(`bookmark${id_bookmark}`) as HTMLInputElement;
       if (buttonElement){
         buttonElement.checked = false;
       }

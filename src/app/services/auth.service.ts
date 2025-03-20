@@ -39,14 +39,14 @@ export class AuthService {
     this.ngZone.run(()=>{});    
     console.log(this.usuario)
     if (this.usuario){
-      let userDB = await this.getId();
+      let userDB = await this.getUsuarioDB();
       if( userDB != false){
         this.usuarioDB = userDB[0]
       }
     }
   }
 
-  async getId(){
+  async getUsuarioDB(){
     return await (this.supabaseService.getUsuario(this.usuario.email))
   }
 

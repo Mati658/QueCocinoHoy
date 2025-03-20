@@ -146,6 +146,22 @@ export class SupabaseService {
     return false;
   }
 
+  async updateStar(receta:number, starsTotales:number, votosTotales:number){
+    console.log(receta)
+    let data = (await supabase
+      .from('recetas')
+      .update({stars: {"stars":starsTotales, "votos":votosTotales}})
+      .eq('id', receta)
+      .select()).data
+
+
+    console.log(data);
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
   async updateComentario(receta:number, comentario:string, user:any, comentariosOld:any[]){
     let data = (await supabase
       .from('recetas')
@@ -225,6 +241,28 @@ export class SupabaseService {
         .select()).data
     }
         
+    console.log(data);
+    if (data != null)  
+      return data;
+    return false;
+  }
+
+  async updateStarsUsuario(receta_id:number, stars:number, user_id:number, listaStars:any[], reVotar:boolean = false){
+    let data : any;
+    if(!reVotar){
+      data = (await supabase
+      .from('usuarios')
+      .update({puntuados: [...listaStars,{"stars":stars, "id_receta":receta_id}]})
+      .eq('id', user_id)
+      .select()).data
+    }else{
+      data = (await supabase
+        .from('usuarios')
+        .update({puntuados: listaStars})
+        .eq('id', user_id)
+        .select()).data
+    }
+      
     console.log(data);
     if (data != null)  
       return data;

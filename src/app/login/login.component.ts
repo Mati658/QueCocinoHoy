@@ -54,8 +54,10 @@ export class LoginComponent implements AfterViewInit {
     }
     this.auth.handleSignInWithGoogle(response).then(res=>{
       if (this.auth.usuario) {
-        console.log("AAaAAAAAA")
         this.supabase.altaUsuario(this.auth.usuario);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     })
   }

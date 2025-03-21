@@ -61,6 +61,12 @@ export class HomeComponent implements AfterViewInit{
     this.cargarRecetas();
   }
 
+  ordenarRecetasStars(){
+    this.recetas = this.recetasTotales.sort((a:any,b:any)=>a.stars.stars - b.stars.stars).reverse()
+    this.recetasMostrar = [];
+    this.cargarRecetas();
+  }
+
   async ordernarRecetasRandom(){
     for (let i = this.recetas.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1)); 
@@ -259,6 +265,18 @@ export class HomeComponent implements AfterViewInit{
     console.log(this.recetas)
     this.recetasMostrar = [];
     this.cargarRecetas();
+  }
+
+  getStars(stars:number, votos:number, id:string){
+    if (votos == 0)
+      return 0
+
+    let star = Math.round(stars / votos); 
+    const buttonElement = document.getElementById(id+(star-1)) as HTMLInputElement;
+    if (buttonElement){
+      buttonElement.checked = true;  
+    }
+    return;
   }
 
   verificarUsuario(){

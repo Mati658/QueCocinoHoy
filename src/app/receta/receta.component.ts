@@ -19,6 +19,8 @@ export class RecetaComponent {
   imagen : string = "";
   comentario : string = "";
   recetaStars : any;
+  flagVotado : boolean = false;
+  starAnterior : any;
 
   @Input() set recetaRecibida(receta:any){
     this.receta = receta;
@@ -61,7 +63,6 @@ export class RecetaComponent {
 
   verificarLike(){
     if (!this.verificarUsuario()) {
-      this.auth.flagLogin = true;
       const buttonElement = document.getElementById(`heart`) as HTMLInputElement;
       if (buttonElement){
         buttonElement.checked = false;
@@ -89,7 +90,6 @@ export class RecetaComponent {
 
   verificarSave(){
     if (!this.verificarUsuario()) {
-      this.auth.flagLogin = true;
       const buttonElement = document.getElementById(`bookmark`) as HTMLInputElement;
       if (buttonElement){
         buttonElement.checked = false;
@@ -116,7 +116,6 @@ export class RecetaComponent {
           this.comentario = "";
           return;
         }
-        this.auth.flagLogin = true;
         return;
       }
     }
@@ -124,83 +123,64 @@ export class RecetaComponent {
 
   verificarStars(){
     if (!this.verificarUsuario()) {
-      this.auth.flagLogin = true;
       return false
     }
     this.recetaStars = this.receta.stars;
-    console.log(this.auth.usuarioDB.puntuados[0])
-    for (let i = 0; i < this.auth.usuarioDB.puntuados.length; i++) {
+    console.log(this.auth.usuarioDB.puntuados)
+    for (let i = 0; i < this.auth.usuarioDB.puntuados?.length; i++) {
       const element = this.auth.usuarioDB.puntuados[i];
       if (element.id_receta == this.receta.id) {
-        const buttonElement = document.getElementById(`star-${element.stars}`) as HTMLInputElement;
-        console.log(`star-${element.stars}`);
-        this.recetaStars = element; 
-        if (buttonElement){
-          buttonElement.checked = true;
-        }
-        return true;
+        setTimeout(() => {
+          const buttonElement = document.getElementById(`star-${this.recetaStars.stars}`) as HTMLInputElement;
+          console.log(`star-${element.stars}`);
+          this.recetaStars = element; 
+          console.log(this.recetaStars)
+          this.flagVotado = true;
+          if (buttonElement){
+            buttonElement.checked = true;
+          }
+          return true;
+        }, 0);
       }
     }
     return false
   }
 
-  async puntuarReceta(stars:number){
-    if (this.verificarUsuario()) { 
-      if (stars == this.receta.stars.stars) {
-        return;
-      }
-      this.auth.usuarioDB.puntuados = this.auth.usuarioDB.puntuados != null ? this.auth.usuarioDB.puntuados : []
-
-      
-      if (this.recetaStars.id_receta != 0) {
-        let i = this.auth.usuarioDB.puntuados.findIndex((x:any) => x.id_receta === this.recetaStars.id_receta)      
-        this.auth.usuarioDB.puntuados[i] = {"stars":stars, "id_receta":this.receta.id}
-      }
-      let data : any = await this.supabase.updateStarsUsuario(this.receta.id, stars, this.auth.usuarioDB.id, this.auth.usuarioDB.puntuados, this.verificarStars())
-      this.auth.usuarioDB.puntuados = data[0].puntuados;
-      if (this.recetaStars.stars != 0) {
-        
-        if (stars >  this.receta.stars.stars) {
-          console.log("stars >  this.receta.stars.stars")
-          console.log(stars)
-          console.log( this.receta.stars.stars)
-          stars = stars -  this.receta.stars.stars;
-          console.log(stars)
-        }else if (stars <  this.receta.stars.stars) {
-          console.log("stars <  this.receta.stars.stars")
-          console.log(stars)
-          console.log( this.receta.stars.stars)
-          stars = -( this.receta.stars.stars - stars);
-        }
-      }
-
-      console.log(stars)
-      let puntos = this.receta.stars.stars += stars
-      console.log(puntos)
-      let recetaActualizada : any = await this.supabase.updateStar(this.receta.id, puntos, this.receta.stars.votos+=1);
-      this.receta.stars = recetaActualizada[0].stars;
-      console.log(this.receta.stars)
+  async puntuarReceta(stars: number) {
+    if (!this.verificarUsuario()) return false;
+  
+    this.auth.usuarioDB.puntuados = this.auth.usuarioDB.puntuados || [];
+  
+    let votos = this.receta.stars.votos;
+    let puntosActuales = this.receta.stars.stars;
+    let index = this.auth.usuarioDB.puntuados.findIndex((x: any) => x.id_receta === this.receta.id);
+    let starAnterior = index !== -1 ? this.auth.usuarioDB.puntuados[index].stars : 0;
+  
+    if (index !== -1) {
+      this.auth.usuarioDB.puntuados[index].stars = stars;
+    } else {
+      this.auth.usuarioDB.puntuados.push({ stars, id_receta: this.receta.id });
+      votos++;
     }
+  
+    let diferenciaStars = stars - starAnterior;
+    let puntosNuevos = puntosActuales + diferenciaStars;
+  
+    let data: any = await this.supabase.updateStarsUsuario(this.receta.id,stars,this.auth.usuarioDB.id,this.auth.usuarioDB.puntuados);
+    this.auth.usuarioDB.puntuados = data[0].puntuados;
+  
+    let recetaActualizada: any = await this.supabase.updateStar(this.receta.id, puntosNuevos, votos);
+    this.receta.stars = recetaActualizada[0].stars;
+  
+    console.log(`Nueva puntuación: ${this.receta.stars.stars}, Votos: ${votos}`);
+    return true;
   }
-
-  verificarVoto(){
-    for (let i = 0; i < this.auth.usuarioDB.puntuados.length; i++) {
-      const element = this.auth.usuarioDB.puntuados[i];
-      if (element.id_receta == this.receta.id) {
-        this.recetaStars = element; 
-
-        break;
-      }
-    }
-    if (this.receta.id) {
-      
-    }
-  }
-
+  
   verificarUsuario(){
     if (this.auth.usuario) {
       return true
     }
+    this.auth.flagLogin = true;
     return false;
   }
 }

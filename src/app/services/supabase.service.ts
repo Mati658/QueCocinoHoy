@@ -18,7 +18,7 @@ export class SupabaseService {
   async getTodasRecetas(ordenarPor:string = "id", ascending:boolean = true){
     let data = (await supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
+      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
       .order(ordenarPor, {ascending: ascending})).data
     if (data != null)     
       return data;

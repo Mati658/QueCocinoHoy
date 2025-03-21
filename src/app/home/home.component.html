@@ -50,7 +50,7 @@
     <div class="btn-container">
         <button (click)="ordernarRecetas('updated_at')" class="button-ordenar">Más recientes</button>
         <button (click)="ordernarRecetas('likes', false)" class="button-ordenar">Likes</button>
-        <button (click)="ordernarRecetas('stars', false)" class="button-ordenar">Puntación</button>
+        <button (click)="ordenarRecetasStars()" class="button-ordenar">Puntación</button>
         <button (click)="ordernarRecetasRandom()" class="button-ordenar">Random</button>
     </div>
 
@@ -60,16 +60,16 @@
                 <img [src]="receta.imagenes[0]" class="img-feed" (click)="SeleccionarReceta(receta)">
                 <h3 class="receta-name-feed rouge-script truncate-multiline" *ngIf="receta!=null" (click)="SeleccionarReceta(receta)">{{receta.name}}</h3>
                 
-                <div class="rating">
+                <div class="rating" [autofocus]="getStars(receta.stars.stars, receta.stars.votos, 'star'+receta.id+ $index)">
                     <input value="5" [name]="'rate'+receta.id+ $index+4" [id]="'star'+receta.id+ $index+4" type="radio" disabled [checked]="false">
                     <label title="text" [for]="'star'+receta.id+ $index+4"></label>
                     <input value="4" [name]="'rate'+receta.id+ $index+3" [id]="'star'+receta.id+ $index+3" type="radio" disabled [checked]="false">
                     <label title="text" [for]="'star'+receta.id+ $index+3"></label>
-                    <input value="3" [name]="'rate'+receta.id+ $index+2" [id]="'star'+receta.id+ $index+2" type="radio" disabled [checked]="true">
+                    <input value="3" [name]="'rate'+receta.id+ $index+2" [id]="'star'+receta.id+ $index+2" type="radio" disabled [checked]="false">
                     <label title="text" [for]="'star'+receta.id+ $index+2"></label>
                     <input value="2" [name]="'rate'+receta.id+ $index+1" [id]="'star'+receta.id+ $index+1" type="radio" disabled [checked]="false">
                     <label title="text" [for]="'star'+receta.id+ $index+1"></label>
-                    <input value="1" [name]="'rate'+receta.id+ $index" [id]="'star'+receta.id+ $index" type="radio" disabled [checked]="false">
+                    <input value="1" [name]="'rate'+receta.id+ $index" [id]="'star'+receta.id+0+$index" type="radio" disabled [checked]="false">
                     <label title="text" [for]="'star'+receta.id+ $index"></label>
                 </div>
 

@@ -18,6 +18,7 @@ export class AuthService {
   usuarioDB : any;
   sesion : any;
   flagLogin : boolean = false;
+  flagRecetaPerfil : boolean = false;
 
   constructor() { 
     // this.signOut()

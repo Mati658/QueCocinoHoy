@@ -15,11 +15,11 @@ export class SupabaseService {
    * 
    * @param ordenarPor Atributo por el cual se quiera ordenar
    */
-  async getTodasRecetas(ordenarPor:string = "id", ascending:boolean = true){
+  async getTodasRecetas(ordenarPor:string = "id"){
     let data = (await supabase
       .from('recetas')
       .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
-      .order(ordenarPor, {ascending: ascending})).data
+      ).data
     if (data != null)     
       return data;
     
@@ -29,7 +29,7 @@ export class SupabaseService {
   async getRecetaString(receta: string | number){
     let data = (await supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
+      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
       .ilike('name',`%${receta}%`)).data
 
     if (data != null)  
@@ -41,7 +41,7 @@ export class SupabaseService {
   async getRecetaId(receta: number){
     let data = (await supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, user_id (name, imagen)')
+      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
       .eq('id',receta)).data
 
     if (data != null)  

@@ -1,10 +1,15 @@
+.observer {
+  height: 20px; // espacio para que el observer detecte el final
+  // margin-bottom: 30px;
+}
+
 .container{
     position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 100%;
+    height: 100%;
 }
 
 .fondo{
@@ -14,9 +19,142 @@
     top:  0;
     z-index: 0;
     min-width: 100%;
-    height: 20%;
+    height: 132px;
     background-color: #ffdada;
 }
+
+.btn-sign-out{
+  position: absolute;
+  top: 21%;
+  right: 5%;
+}
+
+.recetas-container{
+  position:relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2%;
+  row-gap: 2vh;
+  overflow-y: auto;
+}
+
+.img-feed{
+  position: relative;
+  width: 100%;
+  height: 70%;
+  top: -1vh;
+}
+
+.receta-name-feed{
+  position: relative;
+  font-size: 2rem;
+  top: -45px;
+  text-align: center;
+  color: #4D4D4D;
+  min-height: 80px;
+
+}
+
+.truncate-multiline {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.modal-receta{
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  // margin-top: 70px;
+  max-width: 700px;
+  height: auto;
+  height: 85%;
+  min-width: 700px;
+  background-color:#F6F6F6;
+  z-index: 10;
+  align-self: center;
+}
+
+.card {
+  --border-radius: 0.2rem;
+  width: 250px;
+  height: 220px;
+  font-family: "Arial";
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  background: #FFE6D7;
+  position: relative;
+}
+
+.card > * + * {
+  margin-top: 1.1em;
+}
+
+
+/* From Uiverse.io by Yaya12085 */ 
+.radio-inputs {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.2rem;
+  background-color: #EEE;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 100%;
+  font-size: 14px;
+}
+
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  fill: rgb(135, 144, 155);
+  transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+}
+
+.radio-inputs .radio input:checked + .logo-feed {
+  fill: #181717;
+  background-color: #fff;
+  font-weight: 600;
+}
+
+.radio-inputs .radio input:checked + .logo-like {
+  fill: #ff5b89;
+  background-color: #fff;
+  font-weight: 600;
+}
+
+.radio-inputs .radio input:checked + .logo-save {
+  fill: gold;
+  background-color: #fff;
+  font-weight: 600;
+}
+
 
 .card-client {
     width: 13rem;
@@ -128,7 +266,7 @@
 
 
 
-  button {
+  .btn-sign-out {
     --primary-color: #645bff;
     --secondary-color: #fff;
     --hover-color: #111;
@@ -147,13 +285,13 @@
     font-weight: bold;
   }
   
-  button .arrow-wrapper {
+  .btn-sign-out .arrow-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  button .arrow {
+  .btn-sign-out .arrow {
     margin-top: 1px;
     width: var(--arrow-width);
     background: var(--primary-color);
@@ -162,7 +300,7 @@
     transition: 0.2s;
   }
   
-  button .arrow::before {
+  .btn-sign-out .arrow::before {
     content: "";
     box-sizing: border-box;
     position: absolute;
@@ -176,14 +314,114 @@
     transform: rotate(-45deg);
   }
   
-  button:hover {
+  .btn-sign-out:hover {
     background-color: var(--hover-color);
   }
   
-  button:hover .arrow {
+  .btn-sign-out:hover .arrow {
     background: var(--secondary-color);
   }
   
-  button:hover .arrow:before {
+  .btn-sign-out:hover .arrow:before {
     right: 0;
   }
+
+
+  .Btn {
+    position: absolute;
+    left: 5%;
+    top: 21%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 45px;
+    height: 45px;
+    border-radius: calc(45px/2);
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition-duration: .3s;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background: linear-gradient(144deg,#af40ff,#5b42f3 50%,#00ddeb);
+  }
+  
+  /* plus sign */
+  .sign {
+    width: 100%;
+    font-size: 2.2em;
+    color: white;
+    transition-duration: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* text */
+  .text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: 1.4em;
+    font-weight: 500;
+    transition-duration: .3s;
+  }
+  /* hover effect on button width */
+  .Btn:hover {
+    width: 155px;
+    transition-duration: .3s;
+  }
+  
+  .Btn:hover .sign {
+    width: 30%;
+    transition-duration: .3s;
+    padding-left: 5px;
+  }
+  /* hover effect button's text */
+  .Btn:hover .text {
+    opacity: 1;
+    width: 70%;
+    transition-duration: .3s;
+    padding-right: 15px;
+  }
+  /* button click effect*/
+  .Btn:active {
+    transform: translate(2px ,2px);
+  }
+//-----------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------Stars------------------------------------------------------------------
+.rating:not(:checked) > input {
+  position: absolute;
+  appearance: none;
+  
+}
+
+.rating:not(:checked) > label {
+  float: right;
+  cursor: default;
+  font-size: 40px;
+  color: #666; 
+  position: relative;
+  top: -100px;
+  right: 40px;
+}
+
+.rating:not(:checked) > label:before {
+  content: '★';
+}
+
+.rating > input:checked,
+.rating > input:checked ~ label,
+.rating > input:checked,
+.rating > input:checked ~ label,
+.rating > input:checked ~ label {
+  color: #e58e09;
+}
+
+
+
+.rating > input:checked ~ label {
+  color: #ffa723;
+}
+//-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------

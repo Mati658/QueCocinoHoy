@@ -14,7 +14,7 @@
 <div class="container">
     <div class="blur" *ngIf="flagPerfil"></div>
     <!-- #region VENTANA MODAL PERFIL -->
-    <div class="modal-perfil" *ngIf="flagPerfil!=false" appClickOutside (outside)="recibirFlag($event, 'perfil')">
+    <div class="modal-perfil" *ngIf="flagPerfil!=false" appClickOutside (outside)="!auth.flagRecetaPerfil ? recibirFlag($event, 'perfil') : ''">
         <app-perfil></app-perfil>
     </div>
     <!-- <div class="modal-perfil" appClickOutside (outside)="recibirFlag($event, 'perfil')">

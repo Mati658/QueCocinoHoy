@@ -55,14 +55,12 @@ export class HomeComponent implements AfterViewInit{
     console.log(this.recetasMostrar)
   }
 
-  async ordernarRecetas(atributo:string, ascending:boolean = true){
-    this.recetas = await this.supabase.getTodasRecetas(atributo, ascending);
-    this.recetasMostrar = [];
-    this.cargarRecetas();
-  }
+  async ordernarRecetas(atributo:any, ascending:boolean = true){
+    if (atributo == 'stars') 
+      this.recetas = this.recetasTotales.sort((a:any,b:any)=>(this.getStars(a[atributo][atributo], a[atributo].votos) - this.getStars(b[atributo][atributo], b[atributo].votos))).reverse();
+    else
+      this.recetas = ascending ? this.recetasTotales.sort((a:any,b:any)=>a[atributo] - b[atributo]) : this.recetasTotales.sort((a:any,b:any)=>a[atributo] - b[atributo]).reverse();
 
-  ordenarRecetasStars(){
-    this.recetas = this.recetasTotales.sort((a:any,b:any)=>a.stars.stars - b.stars.stars).reverse()
     this.recetasMostrar = [];
     this.cargarRecetas();
   }
@@ -267,16 +265,24 @@ export class HomeComponent implements AfterViewInit{
     this.cargarRecetas();
   }
 
-  getStars(stars:number, votos:number, id:string){
+  getStars(stars:number, votos:number, id:string = '0'){
     if (votos == 0)
       return 0
 
     let star = Math.round(stars / votos); 
-    const buttonElement = document.getElementById(id+(star-1)) as HTMLInputElement;
+    const buttonElement = document.getElementById(id+(star)) as HTMLInputElement;
     if (buttonElement){
       buttonElement.checked = true;  
     }
-    return;
+    return star;
+  }
+
+  resetStars(id:string){
+    for (let i = 0; i < 5; i++) {
+      const buttonElement = document.getElementById(id+(i+1)) as HTMLInputElement;
+      if (buttonElement)
+        buttonElement.checked = false;  
+    }
   }
 
   verificarUsuario(){

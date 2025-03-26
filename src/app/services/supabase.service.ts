@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 })
 
 export class SupabaseService {
-  supabaseUrl : string = environment.URL;
+  supabaseUrl : string = environment.SUPABASE_URL;
   supabaseKey : string = environment.SUPABASE_KEY;
   constructor() { }
   /**

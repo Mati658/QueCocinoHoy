@@ -12,7 +12,7 @@ export class AuthService {
   supabaseService = inject(SupabaseService);
   ngZone = inject(NgZone);
   router = inject(Router)
-  supabaseUrl : string = environment.URL;
+  supabaseUrl : string = environment.SUPABASE_URL;
   supabaseKey : string = environment.SUPABASE_KEY;
   usuario : any;
   usuarioDB : any;

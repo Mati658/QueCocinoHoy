@@ -42,7 +42,8 @@ export class AuthService {
     if (this.usuario){
       let userDB = await this.getUsuarioDB();
       if( userDB != false){
-        this.usuarioDB = userDB[0]
+        this.usuarioDB = userDB[0];
+        this.supabaseService.usuarioDB = userDB[0];
       }
     }
   }

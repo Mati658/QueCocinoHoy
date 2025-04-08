@@ -5,6 +5,8 @@ import { SupabaseService } from '../services/supabase.service';
 import { RecetaComponent } from '../receta/receta.component';
 import { ClickOutsideDirective } from '../directives/click-outside.directive';
 import { PublicacionComponent } from '../publicacion/publicacion.component';
+import Swal from 'sweetalert2';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-perfil',
@@ -16,6 +18,7 @@ import { PublicacionComponent } from '../publicacion/publicacion.component';
 export class PerfilComponent implements AfterViewInit {
   auth = inject(AuthService);
   supabase = inject(SupabaseService);
+  storage = inject(StorageService);
   recetasTotales: any[] = [];
   recetasMostrar: any[] = [];
   recetasLimit = 6;
@@ -30,12 +33,13 @@ export class PerfilComponent implements AfterViewInit {
     console.log(this.auth.usuarioDB)
   }
   async ngAfterViewInit() {
-    this.getListaRecetas('likeados')  //!!!!!!!!!!!!!ACOMODAR PARA QUE SEAN LOS PUBLICADOS!!!!!!!!!!!!!!!!
+    this.getListaRecetas('publicados')  //!!!!!!!!!!!!!ACOMODAR PARA QUE SEAN LOS PUBLICADOS!!!!!!!!!!!!!!!!
     this.setupIntersectionObserver();
   }
 
   async getListaRecetas(atributo:string){
     this.recetasTotales = [];
+    console.log(this.auth.usuarioDB)
     for await (const item of this.auth.usuarioDB[atributo] != null ? this.auth.usuarioDB[atributo] : []) {
       let receta : any= await this.supabase.getRecetaId(item)
       this.recetasTotales.push(...receta);
@@ -98,12 +102,44 @@ export class PerfilComponent implements AfterViewInit {
           break;
         case 'publicacion':
           this.flagPublicacion = !flag;
+          this.auth.flagRecetaPerfil = !flag    
           break;
       }
 
       
       this.flagAnim = true;
     }, 500);
+  }
+
+  eliminarReceta(receta:any){
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertirlo!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await this.storage.deleteFoto(receta.imagenes[0].split("images/")[1])
+        await this.supabase.bajaReceta(receta.id)
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "La receta fue eliminada.",
+          icon: "success"
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    });
+  }
+
+  editReceta(receta:any){
+    this.recetaSeleccionada = receta;
+    this.recibirFlag(false, 'publicacion');
   }
 
   signOut(){

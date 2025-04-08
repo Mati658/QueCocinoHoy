@@ -14,6 +14,14 @@
   font-style: normal;
 }
 
+.roboto{
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
 
 .no-scroll{
   overflow-y: hidden;
@@ -354,18 +362,66 @@
 }
 //-----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------
-/* From Uiverse.io by Yaya12085 */ 
-
-.modal-publicacion{
-  position: fixed;
+.editButton {
+  width: 40px;
+  height: 40px;
   display: flex;
   flex-direction: column;
-  max-width: 700px;
-  height: auto;
-  height: 85%;
-  min-width: 700px;
-  background-color:#F6F6F6;
-  z-index: 10;
-  align-self: center;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: absolute;
+  top: 70%;
+  // right: 0;
+  overflow: hidden;
 }
-
+.editButton svg {
+  width: 70%;
+}
+.editButton:hover {
+  background-color: rgb(0, 88, 188);
+  overflow: visible;
+}
+.bin path {
+  transition: all 0.2s;
+}
+.editButton:hover .bin path {
+  stroke: #fff;
+}
+.editButton:active {
+  transform: scale(0.98);
+}
+.tooltip {
+  --tooltip-color: rgb(41, 41, 41);
+  position: absolute;
+  top: -40px;
+  background-color: var(--tooltip-color);
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 8px 12px;
+  font-weight: 600;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.105);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.5s;
+}
+.tooltip::before {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  content: "";
+  background-color: var(--tooltip-color);
+  bottom: -10%;
+}
+.editButton:hover .tooltip {
+  opacity: 1;
+}

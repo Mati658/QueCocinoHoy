@@ -3,11 +3,12 @@ import { AfterViewInit, Component, inject, Input } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { GetTimePipe } from '../pipes/get-time.pipe';
 
 @Component({
   selector: 'app-receta',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GetTimePipe],
   templateUrl: './receta.component.html',
   styleUrl: './receta.component.scss'
 })

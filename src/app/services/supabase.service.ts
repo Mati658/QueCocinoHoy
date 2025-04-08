@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import supabase from '../supabaseClient'; // Importamos la instancia única
-import { AuthService } from './auth.service';
+import supabase from '../supabaseClient';
+import { Receta } from '../receta';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 export class SupabaseService {
   supabaseUrl : string = environment.SUPABASE_URL;
   supabaseKey : string = environment.SUPABASE_KEY;
+  usuarioDB : any;
   constructor() { }
   /**
    * 
@@ -18,7 +19,7 @@ export class SupabaseService {
   async getTodasRecetas(ordenarPor:string = "id"){
     let data = (await supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
+      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen), created_at')
       ).data
     if (data != null)     
       return data;
@@ -29,7 +30,7 @@ export class SupabaseService {
   async getRecetaString(receta: string | number){
     let data = (await supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
+      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen), created_at')
       .ilike('name',`%${receta}%`)).data
 
     if (data != null)  
@@ -41,7 +42,7 @@ export class SupabaseService {
   async getRecetaId(receta: number){
     let data = (await supabase
       .from('recetas')
-      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen)')
+      .select('id, name, description, time, likes, stars, imagenes, comments, stars, user_id (name, imagen), created_at')
       .eq('id',receta)).data
 
     if (data != null)  
@@ -268,4 +269,155 @@ export class SupabaseService {
       return data;
     return false;
   }
+
+  async updatePublisUsuario(receta_id:number, user_id:number, listaPublis:any[]){
+    let data : any;
+    data = (await supabase
+      .from('usuarios')
+      .update({publicados: [...listaPublis,receta_id]})
+      .eq('id', user_id)
+      .select()).data
+    
+        
+    console.log(data);
+    if (data != null)  
+      return data;
+    return false;
+  }
+
+  async subirReceta(receta:Receta){
+    let recetaNueva : any = await this.altaReceta(receta);
+    if (!recetaNueva) {
+      return false;
+    }
+    for await (const item of Object.keys(receta.ingredientes)) {
+      let res : any = await this.getIngrediente(item);
+      if (res.length == 0) {
+        await this.altaIngrediente(item, this.usuarioDB.id);
+        res = await this.getIngrediente(item);
+      }
+      await this.altaRecIng(res[0].id, recetaNueva[0].id, receta.ingredientes[item])
+    }
+    return recetaNueva;
+  }
+
+  async altaReceta(receta:Receta){
+    let data = (await supabase
+    .from('recetas')
+    .insert([
+      { name: receta.titulo, description:receta.descripcion , time:receta.tiempo , imagenes:[receta.imagenURL], user_id:this.usuarioDB.id ,created_at:receta.fechaPublicada, updated_at: receta.fechaPublicada},
+    ])
+    .select()).data
+
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
+  async altaIngrediente(nombre:string, user_id:number){
+    let data = (await supabase
+    .from('ingredientes')
+    .insert([
+      { name: nombre, user_id:user_id},
+    ])
+    .select()).data
+
+    if (data != null)  
+      return true;
+
+    return false;
+  }
+
+  async altaRecIng(ingredient_id:number, recipe_id:number, cantidad:number){
+    let data = (await supabase
+    .from('ing-rec')
+    .insert([
+      { ingredient_id:ingredient_id , recipe_id:recipe_id , cantidad:cantidad},
+    ])
+    .select()).data
+
+    if (data != null)  
+      return true;
+
+    return false;
+  }
+
+  async bajaReceta(receta_id:number){
+    let data = (await supabase
+      .from('recetas')
+      .delete()
+      .eq("id", receta_id))
+  
+      console.log(receta_id)
+      console.log(data);
+      if (data != null)  
+        return data;
+  
+      return false;
+  }
+
+  async updateReceta(receta:Receta){
+    console.log(receta)
+    let fechaActualizada :any = new Date().toISOString();
+    let data = (await supabase
+    .from('recetas')
+    .update([
+      { name: receta.titulo, description:receta.descripcion , time:receta.tiempo , imagenes:[receta.imagenURL], user_id:this.usuarioDB.id , updated_at: fechaActualizada},
+    ])
+    .eq('id', receta.id)
+    .select()).data
+
+    console.log(data)
+
+    if (data != null)  
+      return data;
+
+    return false;
+  }
+
+  async actualizarReceta(receta:Receta, ingredientesViejos:any){
+    let recetaNueva : any = await this.updateReceta(receta);
+    if (!recetaNueva) {
+      return false;
+    }
+
+    console.log(ingredientesViejos)
+    for await (const item of Object.keys(ingredientesViejos)) {
+      console.log(item)
+      if (!receta.ingredientes[item]) { 
+        let res : any = await this.getIngrediente(item);
+        await this.bajaIngrediente(res[0].id, recetaNueva[0].id)
+      }
+    }
+
+    for await (const item of Object.keys(receta.ingredientes)) {
+      let res : any = await this.getIngrediente(item);
+      if (!ingredientesViejos[item]) { 
+        if (res.length == 0) {
+          await this.altaIngrediente(item, this.usuarioDB.id);
+          res = await this.getIngrediente(item);
+        }
+        await this.altaRecIng(res[0].id, recetaNueva[0].id, receta.ingredientes[item])
+      }
+    }
+    return recetaNueva;
+  }
+
+  async bajaIngrediente(ingredient_id:number, recipe_id:number){
+    console.log(ingredient_id)
+    console.log(recipe_id)
+    let data = (await supabase
+      .from('ing-rec')
+      .delete()
+      .eq("ingredient_id",ingredient_id)
+      .eq("recipe_id",recipe_id)).data
+  
+      console.log(data)
+      if (data != null)  
+        return true;
+  
+      return false;
+  }
+  
 }

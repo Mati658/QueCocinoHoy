@@ -161,7 +161,8 @@
 .comentarios .button-message .content-avatar {
     min-width: 100%;
     height: 100%;
-    position: relative;
+  border-radius: 50%;
+  position: relative;
   }
 
 .comentario{
@@ -177,14 +178,9 @@
 .comentarios  .avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
   overflow: hidden;
   background-color: var(--bg-color-sup);
   position: relative;
-}
-
-.comentarios  .user-img {
-  object-fit: cover;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -391,6 +387,7 @@
   .user-img {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
   }
   

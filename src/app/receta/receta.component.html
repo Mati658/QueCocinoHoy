@@ -53,7 +53,7 @@
         </div>
         <div class="notice-content">
             <div class="username">{{receta.user_id.name}}</div>
-            <div class="user-id">Hace 4 horas (ARREGLAR)</div>
+            <div class="user-id">{{ receta.created_at | getTime }}</div>
         </div>
     </button>
 
